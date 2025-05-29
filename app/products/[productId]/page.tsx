@@ -1,9 +1,7 @@
 import { ProductsData } from "@/app/types/types";
 import { notFound } from "next/navigation";
 
-import { Metadata } from "next";
-
-export async function generateMetadata({ params }: { params: Promise<{ productId: string }> }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ productId: string }> }) {
 
   const { productId } = await params;
   const res = await fetch("https://glore-bd-backend-node-mongo.vercel.app/api/product", {
@@ -11,7 +9,7 @@ export async function generateMetadata({ params }: { params: Promise<{ productId
   });
 
   const products = await res.json();
-  const product = products.find((p: any) => p._id === productId);
+  const product = products.find((p: ProductsData) => p._id === productId);
 
   if (!product) {
     return {
