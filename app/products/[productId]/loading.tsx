@@ -2,6 +2,7 @@ export default function Loading() {
   return (
     <main className="max-w-5xl mx-auto px-4 py-8 animate-pulse">
       <div className="grid md:grid-cols-2 gap-8">
+        
         {/* Left: Image/Video Skeletons */}
         <div className="space-y-4">
           <div className="w-full h-72 bg-gray-200 rounded-xl" />

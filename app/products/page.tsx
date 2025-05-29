@@ -1,6 +1,11 @@
 import Link from "next/link";
 import { ProductsData } from "../types/types";
+import type { Metadata } from "next";
 
+export const metadata: Metadata = {
+    title: "Welcome to all products",
+    description: "This is the page that shows all products"
+}
 
 export default async function Page() {
 

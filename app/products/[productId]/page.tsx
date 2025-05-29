@@ -1,6 +1,42 @@
 import { ProductsData } from "@/app/types/types";
 import { notFound } from "next/navigation";
 
+import { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: Promise<{ productId: string }> }): Promise<Metadata> {
+
+  const { productId } = await params;
+  const res = await fetch("https://glore-bd-backend-node-mongo.vercel.app/api/product", {
+    cache: "no-store",
+  });
+
+  const products = await res.json();
+  const product = products.find((p: any) => p._id === productId);
+
+  if (!product) {
+    return {
+      title: "Product Not Found",
+      description: "The product you are looking for does not exist.",
+    };
+  }
+
+  return {
+    title: product.name,
+    description: product.description || "Explore this amazing product.",
+    openGraph: {
+      title: product.name,
+      description: product.description || "Explore this amazing product.",
+      images: [
+        {
+          url: product.images[0].optimizeUrl || product.images[0].secure_url,
+          alt: product.name,
+        },
+      ],
+    },
+  };
+}
+
+
 export default async function Page({ params }: { params: Promise<{ productId: string }> }) {
 
   const { productId } = await params;
