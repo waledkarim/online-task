@@ -8,14 +8,18 @@ import { StoreFormData } from "@/app/types/types";
 import { FaShapes } from "react-icons/fa6";
 import { MdCurrencyExchange } from "react-icons/md";
 import { MdOutlineEmail } from "react-icons/md";
+import { AiOutlineLoading } from "react-icons/ai";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 
 export default function StoreForm(){
 
+    const [loading, setLoading] = useState(false);
     const {register, handleSubmit, formState: {errors}} = useForm<StoreFormData>({mode: 'onBlur'});
     const router = useRouter();
     const onSubmit = async (formData: StoreFormData) => {
+        setLoading(true);
         console.log("Store formData: ", formData);
         try {
             const res = await fetch("https://interview-task-green.vercel.app/task/stores/create", {
@@ -28,9 +32,12 @@ export default function StoreForm(){
             const data = await res.json();
             console.log(data);
 
-            if(res.ok) return router.push('/products')
+            setLoading(false);
+            if(res.ok) return router.push('/products');
+
         } catch (error) {
-            return console.error("There was an error POSTing to API: ", error);
+          setLoading(false);
+          return console.error("There was an error POSTing to API: ", error);
         }
     }
 
@@ -236,8 +243,10 @@ export default function StoreForm(){
 
           {/* button */}
           <div className="flex justify-end">
-            <button type="submit" className="p-2 rounded bg-blue-700 font-medium text-white">
-                Create Store
+            <button disabled={loading} type="submit" className={`p-2 rounded bg-blue-700 font-medium text-white w-32`}>
+                {
+                  loading ? <AiOutlineLoading className="w-full animate-spin text-center" /> : "Create Store"
+                }
             </button>
           </div>
 
