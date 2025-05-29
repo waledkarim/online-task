@@ -1,14 +1,15 @@
 import { ProductsData } from "@/app/types/types";
 import { notFound } from "next/navigation";
 
-export default async function Page({ params }: { params: { productId: string } }) {
+export default async function Page({ params }: { params: Promise<{ productId: string }> }) {
 
+  const { productId } = await params;
   const res = await fetch("https://glore-bd-backend-node-mongo.vercel.app/api/product", {
     cache: "no-store",
   });
 
   const {data: products} = await res.json();
-  const product = products.find((p: ProductsData) => p._id === params.productId);
+  const product = products.find((p: ProductsData) => p._id === productId);
   if (!product) return notFound();
 
   return (
