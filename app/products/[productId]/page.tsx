@@ -1,7 +1,7 @@
 import { ProductsData } from "@/app/types/types";
 import { notFound } from "next/navigation";
 
-export default async function ProductDetailsPage({ params }: { params: { productId: string } }) {
+export default async function Page({ params }: { params: { productId: string } }) {
 
   const res = await fetch("https://glore-bd-backend-node-mongo.vercel.app/api/product", {
     cache: "no-store",

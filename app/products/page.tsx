@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ProductsData } from "../types/types";
 
 
-export default async function ProductsPage() {
+export default async function Page() {
 
   const res = await fetch("https://glore-bd-backend-node-mongo.vercel.app/api/product", {
     cache: "no-store",
