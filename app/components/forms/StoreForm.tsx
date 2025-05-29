@@ -8,22 +8,30 @@ import { StoreFormData } from "@/app/types/types";
 import { FaShapes } from "react-icons/fa6";
 import { MdCurrencyExchange } from "react-icons/md";
 import { MdOutlineEmail } from "react-icons/md";
+import { useRouter } from "next/navigation";
 
 
 export default function StoreForm(){
 
     const {register, handleSubmit, formState: {errors}} = useForm<StoreFormData>({mode: 'onBlur'});
+    const router = useRouter();
     const onSubmit = async (formData: StoreFormData) => {
         console.log("Store formData: ", formData);
-        const res = await fetch("https://interview-task-green.vercel.app/task/stores/create", {
+        try {
+            const res = await fetch("https://interview-task-green.vercel.app/task/stores/create", {
             headers: {
                 "Content-Type": "application/json"
             },
             method: "POST",
             body: JSON.stringify(formData),
         });
-        const data = await res.json();
-        console.log(data);
+            const data = await res.json();
+            console.log(data);
+
+            if(res.ok) return router.push('/products')
+        } catch (error) {
+            return console.error("There was an error POSTing to API: ", error);
+        }
     }
 
 
