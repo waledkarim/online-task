@@ -1,7 +1,7 @@
 export type StoreFormData = {
-  storeName: string;
-  domainName: string;
-  location: string;
+  name: string;
+  domain: string;
+  country: string;
   category: string;
   currency: string;
   email: string;

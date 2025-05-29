@@ -13,11 +13,19 @@ import { MdOutlineEmail } from "react-icons/md";
 export default function StoreForm(){
 
     const {register, handleSubmit, formState: {errors}} = useForm<StoreFormData>({mode: 'onBlur'});
-    const onSubmit = (formData: StoreFormData) => {
+    const onSubmit = async (formData: StoreFormData) => {
         console.log("Store formData: ", formData);
+        const res = await fetch("https://interview-task-green.vercel.app/task/stores/create", {
+            headers: {
+                "Content-Type": "application/json"
+            },
+            method: "POST",
+            body: JSON.stringify(formData),
+        });
+        const data = await res.json();
+        console.log(data);
     }
 
-    console.log(errors.domainName);
 
     return(
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col pt-5 space-y-5">
@@ -37,9 +45,9 @@ export default function StoreForm(){
 
             <div className="flex-1 md:self-center">
               <label className="block">
-                <input {...register("storeName", {required: "Store name is required"})} type="text" placeholder="What'd you like to call your store" className={`input form-input placeholder:text-sm ${errors.storeName ? "!border !border-red-500 focus:outline-red-500 focus:ring-0 focus:border-transparent" : ""}`}/>
+                <input {...register("name", {required: "Store name is required", minLength: {value: 3, message: "Store name must be atleast 3 characters long"}})} type="text" placeholder="What'd you like to call your store" className={`input form-input placeholder:text-sm ${errors.name ? "!border !border-red-500 focus:outline-red-500 focus:ring-0 focus:border-transparent" : ""}`}/>
                 {
-                    errors.storeName && <p className="error">{errors.storeName.message}</p>
+                    errors.name && <p className="error">{errors.name.message}</p>
                 }
               </label>
             </div>
@@ -62,7 +70,7 @@ export default function StoreForm(){
             <div className="flex-1 md:self-center">
               <label className="block relative">
                 <input 
-                    {...register("domainName", {
+                    {...register("domain", {
                         required: "Domain name is required",
                         validate: {
                             chechDomainavailability: async (value) => {
@@ -71,9 +79,6 @@ export default function StoreForm(){
                             try {
                                 const res = await fetch(`https://interview-task-green.vercel.app/task/domains/check/${domain}`);
                                 const { data } = await res.json();
-
-                                console.log(data);
-                                console.log(data.taken);
 
                                 if(data.taken){
                                     console.log("Unavailable");
@@ -90,13 +95,13 @@ export default function StoreForm(){
                         }
                     })} 
                     type="text" 
-                    placeholder="Domain name" className={`input placeholder:text-sm ${errors.domainName && "!border !border-red-500 focus:outline-red-500 focus:ring-0 focus:border-transparent"}`}
+                    placeholder="Domain name" className={`input placeholder:text-sm ${errors.domain && "!border !border-red-500 focus:outline-red-500 focus:ring-0 focus:border-transparent"}`}
                 />
                 <span className="absolute right-3 inset-y-1 text-gray-500 pointer-events-none">
                   .expressitbd.com
                 </span>
                 {
-                    errors.domainName && <p className="error">{errors.domainName.message}</p>
+                    errors.domain && <p className="error">{errors.domain.message}</p>
                 }
               </label>
             </div>
@@ -118,7 +123,7 @@ export default function StoreForm(){
 
             <div className="flex-1 md:self-center">
               <label className="block">
-                <select {...register("location", {required: "Location is required"})} className={`input form-input placeholder:text-sm ${errors.location ? "border border-red-500 focus:outline-red-500 focus:ring-0 focus:border-transparent" : "border"}`}>
+                <select {...register("country", {required: "Location is required"})} className={`input form-input placeholder:text-sm ${errors.country ? "border border-red-500 focus:outline-red-500 focus:ring-0 focus:border-transparent" : "border"}`}>
                   {
                     ["Bangladesh", "India"].map((country, ind) => (
                       <option key={ind} value={country}>{country}</option>
@@ -126,7 +131,7 @@ export default function StoreForm(){
                   }
                 </select>
                 {
-                    errors.location && <p className="error">{errors.location.message}</p>
+                    errors.country && <p className="error">{errors.country.message}</p>
                 }
               </label>
             </div>
@@ -208,7 +213,7 @@ export default function StoreForm(){
 
             <div className="flex-1 md:self-center">
               <label className="block">
-                <input {...register("email", {required: "Email is required"})} type="text" placeholder="you@gmail.com" className={`input form-input placeholder:text-sm ${errors.email ? "!border !border-red-500 focus:outline-red-500 focus:ring-0 focus:border-transparent" : ""}`}/>
+                <input {...register("email", {required: "Email is required", pattern: {value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: "Invalid email format"}})} type="text" placeholder="you@gmail.com" className={`input form-input placeholder:text-sm ${errors.email ? "!border !border-red-500 focus:outline-red-500 focus:ring-0 focus:border-transparent" : ""}`}/>
                 {
                     errors.email && <p className="error">{errors.email.message}</p>
                 }
