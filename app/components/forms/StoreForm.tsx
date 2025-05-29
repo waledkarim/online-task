@@ -80,6 +80,10 @@ export default function StoreForm(){
                 <input 
                     {...register("domain", {
                         required: "Domain name is required",
+                        pattern: {
+                          value: /^[a-z-]+$/,
+                          message: "Domain name can only have lowercase letters and a hyphen."
+                        },
                         validate: {
                             chechDomainavailability: async (value) => {
                             const domain = `${value}.expressitbd.com`;
