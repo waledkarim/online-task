@@ -8,7 +8,7 @@ export async function generateMetadata({ params }: { params: Promise<{ productId
     cache: "no-store",
   });
 
-  const products = await res.json();
+  const {data: products} = await res.json();
   const product = products.find((p: ProductsData) => p._id === productId);
 
   if (!product) {
